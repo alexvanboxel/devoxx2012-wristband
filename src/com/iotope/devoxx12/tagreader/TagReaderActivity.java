@@ -27,7 +27,7 @@ public class TagReaderActivity extends Activity {
 	private String[][] mTechLists;
 	private IntegrationSchedule integration;
 
-	TagAndCoupon tagAndCoupon = new TagAndCoupon();
+	TagAndCoupon tagAndCoupon = TagAndCoupon.i();
 	private TagAndCouponView tagAndCouponView;
 
 	@Override
@@ -35,7 +35,7 @@ public class TagReaderActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tag_reader);
 		tagAndCouponView = (TagAndCouponView) findViewById(R.id.tagAndCouponView1);
-		tagAndCouponView.onModelChange(tagAndCoupon);
+		tagAndCouponView.onModelChange();
 
 		integration = new IntegrationSchedule(this);
 		adapter = NfcAdapter.getDefaultAdapter(this);
@@ -117,7 +117,7 @@ public class TagReaderActivity extends Activity {
 		// You can access the complete tag through the android Tag API
 		final Tag tag = (Tag) bundle.get("android.nfc.extra.TAG");
 		tagAndCoupon.handleTagEvent(tag);
-		tagAndCouponView.onModelChange(tagAndCoupon);
+		tagAndCouponView.onModelChange();
 		tagAndCouponView.invalidate();
 	}
 

@@ -21,7 +21,7 @@ public class TagAndCoupon {
 	}
 
 	public enum Type {
-		UNKNOWN, CONFERENCE, UNIVERSITY, COMBI
+		ERROR, UNKNOWN, CONFERENCE, UNIVERSITY, COMBI
 	}
 
 	public enum Coupon {
@@ -38,12 +38,16 @@ public class TagAndCoupon {
 		}
 	}
 
-	public TagAndCoupon() {
+	private static final TagAndCoupon instance = new TagAndCoupon();
+	
+	public static TagAndCoupon i() {
+		return instance;
+	}
+	
+	private TagAndCoupon() {
 		map = new HashMap<Coupon, State>();
 		resetState(false);
 	}
-
-	private boolean wasError;
 
 	private String tagId;
 
@@ -80,7 +84,12 @@ public class TagAndCoupon {
 	}
 
 	private void resetState(boolean wasError) {
-		this.wasError = wasError;
+		if(wasError) {
+			ticketType = Type.ERROR;
+		}
+		else {
+			ticketType = Type.UNKNOWN;
+		}
 		map.put(Coupon.BAG, State.UNKNOWN);
 		map.put(Coupon.NOXX, State.UNKNOWN);
 		map.put(Coupon.EAT1, State.UNKNOWN);
@@ -88,7 +97,6 @@ public class TagAndCoupon {
 		map.put(Coupon.EAT3, State.UNKNOWN);
 		map.put(Coupon.EAT4, State.UNKNOWN);
 		tagId = "";
-		ticketType = Type.UNKNOWN;
 		name = "";
 	}
 
@@ -170,6 +178,10 @@ public class TagAndCoupon {
 				name = "";
 			}
 		}
+		else {
+			ticketType = Type.ERROR;
+			name = "";
+		}
 	}
 
 	private byte[] getDigest(int sector) {
@@ -188,10 +200,6 @@ public class TagAndCoupon {
 			e.printStackTrace();
 		}
 		return buffer;
-	}
-
-	public boolean isError() {
-		return wasError;
 	}
 
 	public String getTagId() {
